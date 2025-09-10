@@ -138,10 +138,10 @@ namespace ITnetwork_Pixel_Art_Improved
         public MyCanvas(Size maxSize, Size currentSize, Bitmap bitmap, int maxPixelSize = 16, float zoom = 1, bool isMatrixVisible = false)
         {
             MAX_SIZE = maxSize;
+            CurrentSize = currentSize;
             ImageBitmap = (Bitmap) bitmap.Clone();
             _imageData = BitmapToArray(ImageBitmap);
             PixelSize = maxPixelSize;
-            CurrentSize = currentSize;
             IsMatrixVisible = isMatrixVisible;
         }
 
@@ -161,7 +161,7 @@ namespace ITnetwork_Pixel_Art_Improved
 
             Rectangle picBoxRectangle = new Rectangle(new Point(0, 0), CurrentSize);
             TopLeftCorner = Focus;
-            TopLeftCorner.Offset(- (PixelSize / 2), - (PixelSize / 2));
+            TopLeftCorner.Offset(-(PixelSize / 2), -(PixelSize / 2));
             TopLeftCorner.Offset(-(focusPixel.X * PixelSize), -(focusPixel.Y * PixelSize));
 
             SolidBrush brush = new SolidBrush(Color.White);

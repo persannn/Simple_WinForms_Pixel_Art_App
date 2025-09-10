@@ -1,10 +1,14 @@
 using System.Drawing.Imaging;
+using System.Timers;
 
 namespace ITnetwork_Pixel_Art_Improved
 {
     public partial class MainForm : Form
     {
         private PaletteForm _palette;
+        private bool isMatrixVisible = false;
+        private Point? mouseDownEventLocation;
+        private bool isMouseDown;
         protected string _filePath = "";
         /// <summary>
         /// The actual pixel matrix displayed in the PictureBox that the user will be drawing on.
@@ -13,16 +17,20 @@ namespace ITnetwork_Pixel_Art_Improved
         /// <summary>
         /// The BackColor property represents the color currently selected by the user.
         /// </summary>
-        public Color SelectedColor;
-        public bool isMatrixVisible = false;
-        public bool IsMouseDown;
+        public Color selectedColor;
         public MainForm()
         {
             InitializeComponent();
-            SelectedColor = Color.Black;
+
+            selectedColor = Color.Black;
+
             _canvas = new MyCanvas(20, 20, pictureBoxCanvas.Width, pictureBoxCanvas.Height);
             _canvas.MAX_SIZE = new Size(pictureBoxCanvas.MaximumSize.Width, pictureBoxCanvas.MaximumSize.Height);
+            _canvas.Focus = new Point(-(pictureBoxCanvas.Width / 2), -(pictureBoxCanvas.Height) / 2);
+            pictureBoxCanvas.Invalidate();
+
             zoomValueLabel.Text = _canvas.Zoom.ToString();
+
             _palette = new PaletteForm();
             _palette.SelectedColorChanged += pictureBoxBrushColor_MouseClick;
             _palette.Show();
@@ -47,16 +55,16 @@ namespace ITnetwork_Pixel_Art_Improved
                 ColorDialog myDialog = new ColorDialog();
                 myDialog.FullOpen = true;
                 myDialog.ShowHelp = true;
-                myDialog.Color = SelectedColor;
+                myDialog.Color = selectedColor;
 
                 if (myDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SelectedColor = (sender as PictureBox).BackColor;
-                    SelectedColor = myDialog.Color;
+                    selectedColor = (sender as PictureBox).BackColor;
+                    selectedColor = myDialog.Color;
                 }
             }
 
-            SelectedColor = (sender as PictureBox).BackColor;
+            selectedColor = (sender as PictureBox).BackColor;
         }
 
         #region PictureBoxCanvas
@@ -68,12 +76,12 @@ namespace ITnetwork_Pixel_Art_Improved
 
         private void pictureBoxCanvas_MouseClick(object sender, MouseEventArgs e)
         {
-            if (_canvas.GetPixel(e.X, e.Y).Color == SelectedColor)
+            if (_canvas.GetPixel(e.X, e.Y).Color == selectedColor)
                 return;
             Rectangle? pixelBorders = _canvas.GetPixelBorders(e);
             if (pixelBorders == null)
                 return;
-            _canvas.Click(e.X, e.Y, SelectedColor);
+            _canvas.Click(e.X, e.Y, selectedColor);
             pictureBoxCanvas.Invalidate((Rectangle)pixelBorders);
         }
 
@@ -81,15 +89,28 @@ namespace ITnetwork_Pixel_Art_Improved
         {
             Pixel cursorPos = _canvas.GetPixel(e.X, e.Y);
             Rectangle? pixelBorders = _canvas.GetPixelBorders(e);
+
             if (pixelBorders == null)
+            {
+                if (mouseDownEventLocation != null)
+                {
+                    Point offset = new Point(e.X - mouseDownEventLocation.Value.X, e.Y - mouseDownEventLocation.Value.Y);
+                    _canvas.TopLeftCorner.Offset(offset);
+                    mouseDownEventLocation = e.Location;
+                    pictureBoxCanvas.Invalidate();
+                    return;
+                }
                 return;
+            }
+
             labelXValue.Text = cursorPos.X.ToString();
             labelYValue.Text = (_canvas.ImageBitmap.Height - 1 - cursorPos.Y).ToString();
-            if (IsMouseDown)
+
+            if (isMouseDown && mouseDownEventLocation == null)
             {
-                if (cursorPos.Color != SelectedColor)
+                if (cursorPos.Color != selectedColor)
                 {
-                    _canvas.Click(e.X, e.Y, SelectedColor);
+                    _canvas.Click(e.X, e.Y, selectedColor);
                     pictureBoxCanvas.Invalidate((Rectangle)pixelBorders);
                 }
             }
@@ -97,12 +118,17 @@ namespace ITnetwork_Pixel_Art_Improved
 
         private void pictureBoxCanvas_MouseDown(object sender, MouseEventArgs e)
         {
-            IsMouseDown = true;
+            isMouseDown = true;
+            if (_canvas.GetPixelBorders(e) == null)
+            {
+                mouseDownEventLocation = e.Location;
+            }
         }
 
         private void pictureBoxCanvas_MouseUp(object sender, MouseEventArgs e)
         {
-            IsMouseDown = false;
+            isMouseDown = false;
+            mouseDownEventLocation = null;
         }
 
         private void pictureBoxCanvas_Paint(object sender, PaintEventArgs e)
