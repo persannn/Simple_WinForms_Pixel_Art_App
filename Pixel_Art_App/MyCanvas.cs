@@ -101,11 +101,12 @@ namespace ITnetwork_Pixel_Art_Improved
         {
             MAX_SIZE = new Size(maxWidth, maxHeight);
             CurrentSize = new Size(currentWidth, currentHeight);
+            PixelSize = maxPixelSize;
             ImageBitmap = new Bitmap(gridWidth, gridHeight, PixelFormat.Format32bppArgb);
             _imageData = BitmapToArray(ImageBitmap);
-            PixelSize = maxPixelSize;
             Zoom = zoom;
             IsMatrixVisible = isMatrixVisible;
+            Resize(CurrentSize);
             Clear();
         }
         /// <summary>
@@ -120,11 +121,12 @@ namespace ITnetwork_Pixel_Art_Improved
         {
             MAX_SIZE = maxSize;
             CurrentSize = currentSize;
+            PixelSize = 16;
             ImageBitmap = new Bitmap(gridWidth, gridHeight, PixelFormat.Format32bppArgb);
             _imageData = BitmapToArray(ImageBitmap);
-            PixelSize = 16;
             Zoom = zoom;
             IsMatrixVisible = isMatrixVisible;
+            Resize(CurrentSize);
             Clear();
         }
         /// <summary>
@@ -143,6 +145,7 @@ namespace ITnetwork_Pixel_Art_Improved
             _imageData = BitmapToArray(ImageBitmap);
             PixelSize = maxPixelSize;
             IsMatrixVisible = isMatrixVisible;
+            Resize(CurrentSize);
         }
 
         #endregion

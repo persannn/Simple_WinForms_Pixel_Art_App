@@ -194,14 +194,14 @@ namespace ITnetwork_Pixel_Art_Improved
             // paletteToolStripMenuItem
             // 
             paletteToolStripMenuItem.Name = "paletteToolStripMenuItem";
-            paletteToolStripMenuItem.Size = new Size(159, 26);
+            paletteToolStripMenuItem.Size = new Size(224, 26);
             paletteToolStripMenuItem.Text = "Palette";
             paletteToolStripMenuItem.Click += paletteToolStripMenuItem_Click;
             // 
             // clearToolStripMenuItem
             // 
             clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            clearToolStripMenuItem.Size = new Size(159, 26);
+            clearToolStripMenuItem.Size = new Size(224, 26);
             clearToolStripMenuItem.Text = "Clear";
             clearToolStripMenuItem.Click += Clear;
             // 
@@ -209,7 +209,7 @@ namespace ITnetwork_Pixel_Art_Improved
             // 
             gridCheckBoxStripMenuItem.CheckOnClick = true;
             gridCheckBoxStripMenuItem.Name = "gridCheckBoxStripMenuItem";
-            gridCheckBoxStripMenuItem.Size = new Size(159, 26);
+            gridCheckBoxStripMenuItem.Size = new Size(224, 26);
             gridCheckBoxStripMenuItem.Text = "Show grid";
             gridCheckBoxStripMenuItem.CheckedChanged += CheckBoxMatrixChanged;
             // 

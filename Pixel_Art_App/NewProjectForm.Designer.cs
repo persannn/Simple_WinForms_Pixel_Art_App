@@ -61,7 +61,7 @@
             // numericUpDownWidth
             // 
             numericUpDownWidth.Location = new Point(35, 46);
-            numericUpDownWidth.Maximum = new decimal(new int[] { 800, 0, 0, 0 });
+            numericUpDownWidth.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
             numericUpDownWidth.Name = "numericUpDownWidth";
             numericUpDownWidth.Size = new Size(150, 27);
             numericUpDownWidth.TabIndex = 2;
@@ -81,7 +81,7 @@
             // numericUpDownHeight
             // 
             numericUpDownHeight.Location = new Point(35, 99);
-            numericUpDownHeight.Maximum = new decimal(new int[] { 800, 0, 0, 0 });
+            numericUpDownHeight.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
             numericUpDownHeight.Name = "numericUpDownHeight";
             numericUpDownHeight.Size = new Size(150, 27);
             numericUpDownHeight.TabIndex = 3;

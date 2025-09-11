@@ -1,5 +1,4 @@
 using System.Drawing.Imaging;
-using System.Timers;
 
 namespace ITnetwork_Pixel_Art_Improved
 {
@@ -26,7 +25,6 @@ namespace ITnetwork_Pixel_Art_Improved
 
             _canvas = new MyCanvas(20, 20, pictureBoxCanvas.Width, pictureBoxCanvas.Height);
             _canvas.MAX_SIZE = new Size(pictureBoxCanvas.MaximumSize.Width, pictureBoxCanvas.MaximumSize.Height);
-            _canvas.Focus = new Point(-(pictureBoxCanvas.Width / 2), -(pictureBoxCanvas.Height) / 2);
             pictureBoxCanvas.Invalidate();
 
             zoomValueLabel.Text = _canvas.Zoom.ToString();
@@ -226,9 +224,8 @@ namespace ITnetwork_Pixel_Art_Improved
 
         private void paletteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_palette != null)
+            if (!_palette.IsDisposed)
             {
-                _palette.Show();
                 return;
             }
             _palette = new PaletteForm();
@@ -241,9 +238,9 @@ namespace ITnetwork_Pixel_Art_Improved
             if ((Control.ModifierKeys & Keys.Control) != Keys.Control)
                 return;
             double zoom = _canvas.Zoom;
-            zoom = zoom * Math.Pow(1.1, e.Delta / 120);
-            if (_canvas.PixelSize * zoom <= 0 || zoom > 12)
+            if (_canvas.PixelSize * (zoom * Math.Pow(1.1, e.Delta / 120)) < 1 || _canvas.PixelSize * (zoom * Math.Pow(1.1, e.Delta / 120)) > 200)
                 return;
+            zoom = zoom * Math.Pow(1.1, e.Delta / 120);
             _canvas.Zoom = zoom;
             _canvas.Focus = new Point(e.X, e.Y);
             pictureBoxCanvas.Invalidate();

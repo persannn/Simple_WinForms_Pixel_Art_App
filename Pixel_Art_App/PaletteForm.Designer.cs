@@ -151,7 +151,9 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(224, 140);
-            ControlBox = false;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            ControlBox = true;
             Controls.Add(groupBoxPalette);
             Name = "PaletteForm";
             Text = "Palette";
