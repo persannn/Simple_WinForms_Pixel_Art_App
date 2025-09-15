@@ -59,7 +59,7 @@
             groupBoxPalette.Controls.Add(pictureBox2);
             groupBoxPalette.Controls.Add(pictureBox1);
             groupBoxPalette.Controls.Add(pictureBoxBrushColor);
-            groupBoxPalette.Location = new Point(27, 12);
+            groupBoxPalette.Location = new Point(31, 12);
             groupBoxPalette.Name = "groupBoxPalette";
             groupBoxPalette.Size = new Size(162, 116);
             groupBoxPalette.TabIndex = 5;
@@ -150,11 +150,10 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(224, 140);
+            ClientSize = new Size(228, 144);
+            Controls.Add(groupBoxPalette);
             MaximizeBox = false;
             MinimizeBox = false;
-            ControlBox = true;
-            Controls.Add(groupBoxPalette);
             Name = "PaletteForm";
             Text = "Palette";
             TopMost = true;

@@ -5,9 +5,10 @@ namespace ITnetwork_Pixel_Art_Improved
     public partial class MainForm : Form
     {
         private PaletteForm _palette;
-        private bool isMatrixVisible = false;
         private Point? mouseDownEventLocation;
         private bool isMouseDown;
+        public static int pixelProjectionSizeMin = 1;
+        public static int pixelProjectionSizeMax = 200;
         protected string _filePath = "";
         /// <summary>
         /// The actual pixel matrix displayed in the PictureBox that the user will be drawing on.
@@ -36,8 +37,6 @@ namespace ITnetwork_Pixel_Art_Improved
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            // int picBoxSide = Math.Min(this.ClientRectangle.Width - 40, this.ClientRectangle.Height - 40);
-            // pictureBoxCanvas.Width = pictureBoxCanvas.Height = picBoxSide;
             pictureBoxCanvas.Width = ClientSize.Width;
             pictureBoxCanvas.Height = ClientSize.Height - 40;
             pictureBoxCanvas.Location = new Point((ClientRectangle.Width / 2) - (pictureBoxCanvas.ClientRectangle.Width / 2),
@@ -149,7 +148,7 @@ namespace ITnetwork_Pixel_Art_Improved
 
         private void New(object sender, EventArgs e)
         {
-            NewProjectForm formNew = new NewProjectForm(_canvas, isMatrixVisible);
+            NewProjectForm formNew = new NewProjectForm(_canvas, gridCheckBoxStripMenuItem.Checked);
             formNew.ShowDialog();
 
             if (formNew.DialogResult == DialogResult.OK)
@@ -162,8 +161,7 @@ namespace ITnetwork_Pixel_Art_Improved
 
         private void CheckBoxMatrixChanged(object sender, EventArgs e)
         {
-            isMatrixVisible = !isMatrixVisible;
-            _canvas.IsMatrixVisible = isMatrixVisible;
+            _canvas.IsMatrixVisible = gridCheckBoxStripMenuItem.Checked;
             pictureBoxCanvas.Invalidate();
         }
 
@@ -221,7 +219,11 @@ namespace ITnetwork_Pixel_Art_Improved
                 }
             }
         }
-
+        /// <summary>
+        /// Opens a new PaletteForm if the old one is disposed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void paletteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_palette.IsDisposed)
@@ -236,11 +238,22 @@ namespace ITnetwork_Pixel_Art_Improved
         private void MouseWheeelScrolled(object sender, MouseEventArgs e)
         {
             if ((Control.ModifierKeys & Keys.Control) != Keys.Control)
+            {
+                Point offset = new Point(0, (e.Delta / 120) * _canvas.PixelSize * 6);
+                _canvas.TopLeftCorner.Offset(offset);
+                pictureBoxCanvas.Invalidate();
                 return;
+            }
             double zoom = _canvas.Zoom;
-            if (_canvas.PixelSize * (zoom * Math.Pow(1.1, e.Delta / 120)) < 1 || _canvas.PixelSize * (zoom * Math.Pow(1.1, e.Delta / 120)) > 200)
-                return;
-            zoom = zoom * Math.Pow(1.1, e.Delta / 120);
+            if (_canvas.PixelSize * (zoom * Math.Pow(1.1, e.Delta / 120)) < pixelProjectionSizeMin)
+            {
+                zoom = pixelProjectionSizeMin / _canvas.PixelSize;
+            }
+            else if (_canvas.PixelSize * (zoom * Math.Pow(1.1, e.Delta / 120)) > pixelProjectionSizeMax)
+            {
+                zoom = pixelProjectionSizeMax / _canvas.PixelSize;
+            }
+            else zoom = zoom * Math.Pow(1.1, e.Delta / 120);
             _canvas.Zoom = zoom;
             _canvas.Focus = new Point(e.X, e.Y);
             pictureBoxCanvas.Invalidate();
